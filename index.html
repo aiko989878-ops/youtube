@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Security Console</title>
+  <style>
+    body { background: black; color: limegreen; font-family: monospace; padding:20px; }
+    #console { white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <div id="console"></div>
+  <script>
+    const logs = [
+      "[OK] Boot sequence initialized...",
+      "[INFO] Verifying network security...",
+      "[INFO] Firewall check in progress...",
+      "[WARNING] Suspicious inbound packets detected.",
+      "[ALERT] Unauthorized remote access attempt logged.",
+      "[CRITICAL] Privilege escalation detected.",
+    ];
+    let i = 0;
+    function addLine(){
+      if(i < logs.length){
+        document.getElementById("console").innerHTML += logs[i] + "\\n";
+        i++;
+        setTimeout(addLine, 1500);
+      } else {
+        setTimeout(()=>{
+          document.body.innerHTML = `
+            <h1 style="color:red; text-align:center; font-size:40px;">
+              ⚠️ SYSTEM BREACH ⚠️
+            </h1>
+            <p style="color:lime; text-align:center; font-size:20px;">
+              Root access granted.<br>All files compromised.<br>Remote control active.
+            </p>
+          `;
+        }, 2000);
+      }
+    }
+    addLine();
+  </script>
+</body>
+</html>
