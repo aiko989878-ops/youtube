@@ -3,29 +3,63 @@
 <head>
   <title>Security Console</title>
   <style>
-    body { background: black; color: limegreen; font-family: monospace; padding:20px; }
-    #console { white-space: pre-wrap; }
+    body {
+      background: black;
+      color: limegreen;
+      font-family: monospace;
+      padding: 20px;
+    }
+    #console {
+      white-space: pre-wrap;
+    }
+    .prompt {
+      color: #0f0;
+    }
   </style>
 </head>
 <body>
   <div id="console"></div>
+
   <script>
-    const logs = [
+    const consoleDiv = document.getElementById('console');
+
+    // Fake "serious" logs
+    const fakeLines = [
       "[OK] Boot sequence initialized...",
       "[INFO] Verifying network security...",
       "[INFO] Firewall check in progress...",
       "[WARNING] Suspicious inbound packets detected.",
       "[ALERT] Unauthorized remote access attempt logged.",
       "[CRITICAL] Privilege escalation detected.",
+      "[CRITICAL] Accessing root privileges...",
+      "[CRITICAL] Exfiltrating sensitive data...",
     ];
-    let i = 0;
-    function addLine(){
-      if(i < logs.length){
-        document.getElementById("console").innerHTML += logs[i] + "\\n";
-        i++;
-        setTimeout(addLine, 1500);
+
+    let line = 0;
+    let charIndex = 0;
+
+    function typeLine() {
+      if (line < fakeLines.length) {
+        if (charIndex === 0) {
+          // New line
+          consoleDiv.innerHTML += "<span class='prompt'>> </span>";
+        }
+
+        // Type the text character by character
+        consoleDiv.innerHTML += fakeLines[line][charIndex];
+        charIndex++;
+
+        if (charIndex < fakeLines[line].length) {
+          setTimeout(typeLine, 50); // typing speed
+        } else {
+          consoleDiv.innerHTML += "<br/>";
+          charIndex = 0;
+          line++;
+          setTimeout(typeLine, 500); // small pause between lines
+        }
       } else {
-        setTimeout(()=>{
+        // After all lines printed, show the "breach" screen
+        setTimeout(() => {
           document.body.innerHTML = `
             <h1 style="color:red; text-align:center; font-size:40px;">
               ⚠️ SYSTEM BREACH ⚠️
@@ -34,10 +68,11 @@
               Root access granted.<br>All files compromised.<br>Remote control active.
             </p>
           `;
-        }, 2000);
+        }, 1500);
       }
     }
-    addLine();
+
+    typeLine();
   </script>
 </body>
 </html>
