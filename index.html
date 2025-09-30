@@ -1,78 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Security Console</title>
+  <title>Camera Accessing...</title>
   <style>
     body {
+      margin: 0;
       background: black;
       color: limegreen;
       font-family: monospace;
-      padding: 20px;
     }
-    #console {
-      white-space: pre-wrap;
+    #overlay {
+      position: absolute;
+      top: 10px;
+      left: 15px;
+      color: red;
+      font-size: 24px;
+      font-weight: bold;
     }
-    .prompt {
-      color: #0f0;
+    #time {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      color: white;
+      font-size: 20px;
+    }
+    video, .fake-video {
+      width: 100%;
+      height: 100vh;
+      object-fit: cover;
+    }
+    .fake-video {
+      background: url("https://media.giphy.com/media/oYQ9HRm5Mo7VXeMNVR/giphy.gif") center/cover no-repeat;
+      filter: grayscale(100%);
     }
   </style>
 </head>
 <body>
-  <div id="console"></div>
+  <div id="overlay">● REC</div>
+  <div id="time"></div>
+  <div class="fake-video"></div>
 
   <script>
-    const consoleDiv = document.getElementById('console');
+    // Blink the "REC" dot
+    setInterval(() => {
+      const overlay = document.getElementById("overlay");
+      overlay.style.visibility = (overlay.style.visibility === "hidden") ? "visible" : "hidden";
+    }, 700);
 
-    // Fake "serious" logs
-    const fakeLines = [
-      "[OK] Boot sequence initialized...",
-      "[INFO] Verifying network security...",
-      "[INFO] Firewall check in progress...",
-      "[WARNING] Suspicious inbound packets detected.",
-      "[ALERT] Unauthorized remote access attempt logged.",
-      "[CRITICAL] Privilege escalation detected.",
-      "[CRITICAL] Accessing root privileges...",
-      "[CRITICAL] Exfiltrating sensitive data...",
-    ];
+    // Show fake timer like recording
+    let seconds = 0;
+    setInterval(() => {
+      seconds++;
+      const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+      const secs = String(seconds % 60).padStart(2, '0');
+      document.getElementById("time").innerText = mins + ":" + secs;
+    }, 1000);
 
-    let line = 0;
-    let charIndex = 0;
-
-    function typeLine() {
-      if (line < fakeLines.length) {
-        if (charIndex === 0) {
-          // New line
-          consoleDiv.innerHTML += "<span class='prompt'>> </span>";
-        }
-
-        // Type the text character by character
-        consoleDiv.innerHTML += fakeLines[line][charIndex];
-        charIndex++;
-
-        if (charIndex < fakeLines[line].length) {
-          setTimeout(typeLine, 50); // typing speed
-        } else {
-          consoleDiv.innerHTML += "<br/>";
-          charIndex = 0;
-          line++;
-          setTimeout(typeLine, 500); // small pause between lines
-        }
-      } else {
-        // After all lines printed, show the "breach" screen
-        setTimeout(() => {
-          document.body.innerHTML = `
-            <h1 style="color:red; text-align:center; font-size:40px;">
-              ⚠️ SYSTEM BREACH ⚠️
-            </h1>
-            <p style="color:lime; text-align:center; font-size:20px;">
-              Root access granted.<br>All files compromised.<br>Remote control active.
-            </p>
-          `;
-        }, 1500);
-      }
-    }
-
-    typeLine();
+    // After 6 seconds switch to "SYSTEM BREACH"
+    setTimeout(() => {
+      document.body.innerHTML = `
+        <h1 style="color:red; text-align:center; font-size:50px; margin-top:20%;">
+          ⚠️ SYSTEM BREACH ⚠️
+        </h1>
+        <p style="text-align:center; color:lime; font-size:22px;">
+          Unauthorized camera surveillance detected.<br>
+          Remote access enabled.
+        </p>
+      `;
+    }, 6000);
   </script>
 </body>
 </html>
